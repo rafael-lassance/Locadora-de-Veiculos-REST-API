@@ -5,6 +5,7 @@ import com.rafael.locadoradeveiculos.dto.request.UpdateVeiculoRequest;
 import com.rafael.locadoradeveiculos.dto.response.IdResponse;
 import com.rafael.locadoradeveiculos.dto.response.VeiculoResponse;
 import com.rafael.locadoradeveiculos.service.VeiculoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class VeiculoController {
     private final VeiculoService veiculoService;
 
     @PostMapping
-    public ResponseEntity<IdResponse> create (@RequestBody CreateVeiculoRequest createVeiculoRequest) {
+    public ResponseEntity<IdResponse> create (@RequestBody @Valid CreateVeiculoRequest createVeiculoRequest) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(veiculoService.create(createVeiculoRequest));
@@ -41,7 +42,7 @@ public class VeiculoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update (@PathVariable Long id, @RequestBody UpdateVeiculoRequest updateVeiculoRequest) {
+    public ResponseEntity<?> update (@PathVariable Long id, @RequestBody @Valid UpdateVeiculoRequest updateVeiculoRequest) {
         veiculoService.update(id, updateVeiculoRequest);
         return ResponseEntity.noContent().build();
     }
