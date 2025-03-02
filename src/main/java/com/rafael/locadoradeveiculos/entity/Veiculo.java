@@ -40,6 +40,7 @@ public class Veiculo {
     @NotNull
     private BigDecimal valorDiaria;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private TipoMotor tipoMotor;
 }

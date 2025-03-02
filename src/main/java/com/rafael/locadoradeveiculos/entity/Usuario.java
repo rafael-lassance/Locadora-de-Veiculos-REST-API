@@ -4,6 +4,7 @@ import com.rafael.locadoradeveiculos.entity.enums.TipoUsuario;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,6 +41,7 @@ public class Usuario {
     @Length(min=8, max=20)
     private String senha;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private TipoUsuario tipoUsuario;
 

@@ -1,7 +1,11 @@
 package com.rafael.locadoradeveiculos.dto.request;
 
-public record UpdateLocacaoRequest(Long usuarioId,
-                                   Long veiculoId,
-                                   String dataInicio,
-                                   String dataFim) {
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
+
+public record UpdateLocacaoRequest(@Positive @NotNull(message = "Id do usuário é obrigatório") Long usuarioId,
+                                   @Positive @NotNull(message = "Id do veículo é obrigatório") Long veiculoId,
+                                   @NotNull(message = "Data de início é obrigatória") @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}") String dataInicio,
+                                   @NotNull(message = "Data de fim é obrigatória") @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}") String dataFim) {
 }

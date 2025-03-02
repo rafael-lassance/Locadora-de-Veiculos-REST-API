@@ -5,6 +5,7 @@ import com.rafael.locadoradeveiculos.dto.request.UpdateLocacaoRequest;
 import com.rafael.locadoradeveiculos.dto.response.IdResponse;
 import com.rafael.locadoradeveiculos.dto.response.LocacaoResponse;
 import com.rafael.locadoradeveiculos.service.LocacaoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class LocacaoController {
     private final LocacaoService locacaoService;
 
     @PostMapping
-    public ResponseEntity<IdResponse> create (@RequestBody CreateLocacaoRequest createLocacaoRequest) {
+    public ResponseEntity<IdResponse> create (@RequestBody @Valid CreateLocacaoRequest createLocacaoRequest) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(locacaoService.create(createLocacaoRequest));
@@ -41,7 +42,7 @@ public class LocacaoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update (@PathVariable Long id, @RequestBody UpdateLocacaoRequest updateLocacaoRequest) {
+    public ResponseEntity<?> update (@PathVariable Long id, @RequestBody @Valid UpdateLocacaoRequest updateLocacaoRequest) {
         locacaoService.update(id, updateLocacaoRequest);
         return ResponseEntity.noContent().build();
     }

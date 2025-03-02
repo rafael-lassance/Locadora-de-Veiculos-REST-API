@@ -58,6 +58,9 @@ public class LocacaoService {
         LocalDate dataFim = LocalDate.parse(createLocacaoRequest.dataFim(), dateTimeFormatter);
 
         long quantidadeDias = ChronoUnit.DAYS.between(dataInicio, dataFim);
+        if(quantidadeDias <= 0) {
+            throw new ValidacaoException("Data Fim deve ser posterior à data de Início.");
+        }
 
         /*
             REGRA DE NEGÓCIO:
@@ -126,6 +129,9 @@ public class LocacaoService {
         LocalDate dataFim = LocalDate.parse(updateLocacaoRequest.dataFim(), dateTimeFormatter);
 
         long quantidadeDias = ChronoUnit.DAYS.between(dataInicio, dataFim);
+        if(quantidadeDias <= 0) {
+            throw new ValidacaoException("Data Fim deve ser posterior à data de Início.");
+        }
 
         /*
             REGRA DE NEGÓCIO:
