@@ -5,6 +5,7 @@ import com.rafael.locadoradeveiculos.dto.request.UpdateUsuarioRequest;
 import com.rafael.locadoradeveiculos.dto.response.IdResponse;
 import com.rafael.locadoradeveiculos.dto.response.UsuarioResponse;
 import com.rafael.locadoradeveiculos.service.UsuarioService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
 
     @PostMapping
-    public ResponseEntity<IdResponse> create(@RequestBody CreateUsuarioRequest createUsuarioRequest){
+    public ResponseEntity<IdResponse> create(@RequestBody @Valid CreateUsuarioRequest createUsuarioRequest){
          return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(usuarioService.create(createUsuarioRequest));
@@ -40,7 +41,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestBody UpdateUsuarioRequest updateUsuarioRequest, @PathVariable Long id){
+    public ResponseEntity<?> update(@RequestBody @Valid UpdateUsuarioRequest updateUsuarioRequest, @PathVariable Long id){
         usuarioService.update(updateUsuarioRequest, id);
         return ResponseEntity.noContent().build();
     }
