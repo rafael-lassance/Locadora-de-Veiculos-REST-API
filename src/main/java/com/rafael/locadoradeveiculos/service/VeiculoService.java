@@ -2,12 +2,15 @@ package com.rafael.locadoradeveiculos.service;
 
 import com.rafael.locadoradeveiculos.dto.request.CreateVeiculoRequest;
 import com.rafael.locadoradeveiculos.dto.request.UpdateVeiculoRequest;
+import com.rafael.locadoradeveiculos.dto.request.VeiculoFilterRequest;
 import com.rafael.locadoradeveiculos.dto.response.IdResponse;
 import com.rafael.locadoradeveiculos.dto.response.VeiculoResponse;
+import com.rafael.locadoradeveiculos.dto.response.VeiculoResponsePage;
 import com.rafael.locadoradeveiculos.exception.ValidacaoException;
 import com.rafael.locadoradeveiculos.mapper.VeiculoMapper;
 import com.rafael.locadoradeveiculos.repository.VeiculoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,8 +38,18 @@ public class VeiculoService {
         return veiculoMapper.map(veiculoOptional.get());
     }
 
-    public List<VeiculoResponse> findAll() {
-        return veiculoMapper.map(veiculoRepository.findAll());
+    public VeiculoResponsePage findAllWithPagination(VeiculoFilterRequest veiculoFilterRequest) {
+        var veiculosPage = veiculoRepository.findVeiculos(
+                veiculoFilterRequest.filter().toUpperCase(),
+                PageRequest.of(veiculoFilterRequest.page(), veiculoFilterRequest.size())
+        );
+
+        return new VeiculoResponsePage(
+                veiculosPage.getTotalElements(),
+                veiculosPage.getTotalPages(),
+                veiculoMapper.map(veiculosPage.getContent())
+        );
+
     }
 
     public void update(Long id, UpdateVeiculoRequest updateVeiculoRequest) {

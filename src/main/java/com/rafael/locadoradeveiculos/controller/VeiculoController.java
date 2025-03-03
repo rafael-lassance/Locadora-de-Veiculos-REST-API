@@ -2,8 +2,10 @@ package com.rafael.locadoradeveiculos.controller;
 
 import com.rafael.locadoradeveiculos.dto.request.CreateVeiculoRequest;
 import com.rafael.locadoradeveiculos.dto.request.UpdateVeiculoRequest;
+import com.rafael.locadoradeveiculos.dto.request.VeiculoFilterRequest;
 import com.rafael.locadoradeveiculos.dto.response.IdResponse;
 import com.rafael.locadoradeveiculos.dto.response.VeiculoResponse;
+import com.rafael.locadoradeveiculos.dto.response.VeiculoResponsePage;
 import com.rafael.locadoradeveiculos.service.VeiculoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +37,10 @@ public class VeiculoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<VeiculoResponse>> findAll () {
+    public ResponseEntity<VeiculoResponsePage> findAllWithPagination (VeiculoFilterRequest veiculoFilterRequest) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(veiculoService.findAll());
+                .body(veiculoService.findAllWithPagination(veiculoFilterRequest));
     }
 
     @PutMapping("/{id}")
