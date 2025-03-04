@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -13,6 +14,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class ExceptionsHandler {
+
+    @ExceptionHandler({AuthorizationDeniedException.class})
+    public ResponseEntity<ErrorMessage> methodAuthorizationDeniedException(AuthorizationDeniedException exception) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(new ErrorMessage(HttpStatus.FORBIDDEN.value(), exception.getMessage()));
+    }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<List<FieldErrorMessage>> methodMethodArgumentNotValidException (MethodArgumentNotValidException exception) {

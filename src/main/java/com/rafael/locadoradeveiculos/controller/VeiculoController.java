@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class VeiculoController {
 
     private final VeiculoService veiculoService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<IdResponse> create (@RequestBody @Valid CreateVeiculoRequest createVeiculoRequest) {
         return ResponseEntity
@@ -29,6 +31,7 @@ public class VeiculoController {
                 .body(veiculoService.create(createVeiculoRequest));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENTE')")
     @GetMapping("/{id}")
     public ResponseEntity<VeiculoResponse> findById (@PathVariable Long id) {
         return ResponseEntity
@@ -36,6 +39,7 @@ public class VeiculoController {
                 .body(veiculoService.findById(id));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENTE')")
     @GetMapping
     public ResponseEntity<VeiculoResponsePage> findAllWithPagination (VeiculoFilterRequest veiculoFilterRequest) {
         return ResponseEntity
@@ -43,12 +47,14 @@ public class VeiculoController {
                 .body(veiculoService.findAllWithPagination(veiculoFilterRequest));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<?> update (@PathVariable Long id, @RequestBody @Valid UpdateVeiculoRequest updateVeiculoRequest) {
         veiculoService.update(id, updateVeiculoRequest);
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id){
         veiculoService.deleteById(id);

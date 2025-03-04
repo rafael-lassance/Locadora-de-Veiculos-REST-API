@@ -8,6 +8,7 @@ import com.rafael.locadoradeveiculos.exception.ValidacaoException;
 import com.rafael.locadoradeveiculos.mapper.UsuarioMapper;
 import com.rafael.locadoradeveiculos.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +21,11 @@ public class UsuarioService {
 
     private final UsuarioMapper usuarioMapper;
 
+    private final PasswordEncoder passwordEncoder;
+
     public IdResponse create(CreateUsuarioRequest createUsuarioRequest) {
         var usuario = usuarioMapper.map(createUsuarioRequest);
+        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         usuarioRepository.save(usuario);
         return new IdResponse(usuario.getId());
     }

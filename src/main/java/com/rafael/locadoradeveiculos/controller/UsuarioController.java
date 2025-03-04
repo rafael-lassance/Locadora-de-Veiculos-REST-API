@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class UsuarioController {
                 .body(usuarioService.create(createUsuarioRequest));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioResponse> findById(@PathVariable Long id){
         return ResponseEntity
@@ -33,6 +35,7 @@ public class UsuarioController {
                 .body(usuarioService.findById(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<UsuarioResponse>> findAll(){
         return ResponseEntity
@@ -40,12 +43,14 @@ public class UsuarioController {
                 .body(usuarioService.findAll());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody @Valid UpdateUsuarioRequest updateUsuarioRequest, @PathVariable Long id){
         usuarioService.update(updateUsuarioRequest, id);
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id){
         usuarioService.deleteById(id);
