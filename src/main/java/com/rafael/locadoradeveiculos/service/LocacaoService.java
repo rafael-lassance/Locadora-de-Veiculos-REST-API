@@ -13,6 +13,7 @@ import com.rafael.locadoradeveiculos.mapper.LocacaoMapper;
 import com.rafael.locadoradeveiculos.repository.LocacaoRepository;
 import com.rafael.locadoradeveiculos.repository.UsuarioRepository;
 import com.rafael.locadoradeveiculos.repository.VeiculoRepository;
+import com.rafael.locadoradeveiculos.security.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -39,14 +40,12 @@ public class LocacaoService {
 
     public IdResponse create(CreateLocacaoRequest createLocacaoRequest) {
 
-        Usuario usuario;
         Veiculo veiculo;
 
-        var usuarioOptional = usuarioRepository.findById(createLocacaoRequest.usuarioId());
-        if(usuarioOptional.isEmpty()){
-            throw new ValidacaoException("Usuário não encontrado.");
-        }
-        usuario = usuarioOptional.get();
+        var usuarioEmail = JwtUtils.getUserEmail();
+
+        Usuario usuario = usuarioRepository.findByEmail(usuarioEmail);
+
 
         var veiculoOptional = veiculoRepository.findById(createLocacaoRequest.veiculoId());
         if(veiculoOptional.isEmpty()){
@@ -90,11 +89,19 @@ public class LocacaoService {
     }
 
     public LocacaoResponse findById (Long id) {
+
         var locacaoOptional = locacaoRepository.findById(id);
         if(locacaoOptional.isEmpty()){
             throw new ValidacaoException("Locacao não encontrada");
         }
-        return locacaoMapper.map(locacaoOptional.get());
+        var locacao = locacaoOptional.get();
+
+        Usuario usuario = usuarioRepository.findByEmail(JwtUtils.getUserEmail());
+        if(usuario.getId() != locacao.getUsuario().getId()){
+            throw new ValidacaoException("Usuário somente pode visualizar sua própria locação");
+        }
+
+        return locacaoMapper.map(locacao);
     }
 
     public List<LocacaoResponse> findAll() {
@@ -104,7 +111,6 @@ public class LocacaoService {
     public void update(Long id, UpdateLocacaoRequest updateLocacaoRequest) {
 
         Locacao locacao;
-        Usuario usuario;
         Veiculo veiculo;
 
         var locacaoOptional = locacaoRepository.findById(id);
@@ -113,11 +119,12 @@ public class LocacaoService {
         }
         locacao = locacaoOptional.get();
 
-        var usuarioOptional = usuarioRepository.findById(updateLocacaoRequest.usuarioId());
-        if(usuarioOptional.isEmpty()){
-            throw new ValidacaoException("Usuário não encontrado.");
+        var usuarioEmail = JwtUtils.getUserEmail();
+        Usuario usuario = usuarioRepository.findByEmail(usuarioEmail);
+
+        if(usuario.getId() != locacao.getUsuario().getId()){
+            throw new ValidacaoException("Usuário somente pode atualizar sua própria locação");
         }
-        usuario = usuarioOptional.get();
 
         var veiculoOptional = veiculoRepository.findById(updateLocacaoRequest.veiculoId());
         if(veiculoOptional.isEmpty()){
@@ -161,6 +168,14 @@ public class LocacaoService {
         var locacaoOptional = locacaoRepository.findById(id);
         if(locacaoOptional.isEmpty()){
             throw new ValidacaoException("Locação não encontrada.");
+        }
+
+        var locacao = locacaoOptional.get();
+        var usuarioEmail = JwtUtils.getUserEmail();
+        var usuario = usuarioRepository.findByEmail(usuarioEmail);
+
+        if(usuario.getId() != locacao.getUsuario().getId()){
+            throw new ValidacaoException("Usuário somente pode deletar sua própria locação");
         }
 
         locacaoRepository.deleteById(id);

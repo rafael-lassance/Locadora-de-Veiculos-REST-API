@@ -29,7 +29,7 @@ public class LocacaoController {
                 .body(locacaoService.create(createLocacaoRequest));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','CLIENTE')")
+    @PreAuthorize("hasRole('CLIENTE')")
     @GetMapping("/{id}")
     public ResponseEntity<LocacaoResponse> findById (@PathVariable Long id) {
         return ResponseEntity
@@ -37,7 +37,7 @@ public class LocacaoController {
                 .body(locacaoService.findById(id));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','CLIENTE')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<LocacaoResponse>> findAll () {
         return ResponseEntity
