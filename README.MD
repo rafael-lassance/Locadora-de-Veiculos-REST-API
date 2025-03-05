@@ -37,15 +37,6 @@ Diagrama de Classes:
 ![Diagrama de Classes](https://raw.githubusercontent.com/rafael-lassance/Locadora-de-Veiculos-REST-API/main/assets/classDiagramLocadoraDeVeiculos.png "Diagrama de Classes: Locadora de Veículos")
 
 
-
-### Banco de dados H2:
-Para se conectar ao banco de dados H2 durante os testes:
-```
-endpoint: http://localhost:8080/h2-console/login.jsp
-JDBC URL: jdbc:h2:file:./data/locacoes
-Username: sa
-Password: sa
-```
 ### Tecnologias utilizadas:
 
 - Java 17
